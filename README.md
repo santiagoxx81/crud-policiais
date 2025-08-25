@@ -122,3 +122,4 @@ As rotas podem ser testadas com ferramentas como Insomnia ou Postman.
 
 * **`GET /policiais?rg_civil=<valor>`**
     * **Descrição:** Busca um policial pelo RG Civil.
+Agora vai?
