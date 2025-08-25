@@ -27,6 +27,9 @@ exports.getAll = (req, res) => {
 exports.create = async (req, res) => {
     const { rg_civil, rg_militar, cpf_input, data_nascimento, matricula } = req.body;
 
+    // Converte a data de nascimento para o formato YYYY-MM-DD
+    const dataNascimentoFormatada = new Date(data_nascimento).toISOString().slice(0, 10);
+
     // Validação de campos obrigatórios
     if (!rg_civil || !rg_militar || !cpf_input || !data_nascimento || !matricula) {
         return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
@@ -43,11 +46,15 @@ exports.create = async (req, res) => {
         const matriculaHash = await bcrypt.hash(matricula, saltRounds);
 
         const sql = 'insert into policiais (rg_civil, rg_militar, cpf, data_nascimento, matricula) values (?, ?, ?, ?, ?)';
-        db.query(sql, [rg_civil, rg_militar, cpf_input, data_nascimento, matriculaHash], (erro) => {
-            if (erro) return res.status(500).json({ erro: 'Erro ao criar policial. Verifique os dados e tente novamente.' });
+        db.query(sql, [rg_civil, rg_militar, cpf_input, dataNascimentoFormatada, matriculaHash], (erro) => {
+            if (erro) {
+                console.log(erro);
+                return res.status(500).json({ erro: 'Erro ao criar policial. Verifique os dados e tente novamente.' });
+            }
             res.status(201).json({ mensagem: 'Policial cadastrado com sucesso.' });
         });
     } catch (erro) {
+        console.log(erro);
         res.status(500).json({ erro: 'Erro na criptografia da matrícula.' });
     }
 };
