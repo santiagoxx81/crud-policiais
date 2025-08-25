@@ -1,1 +1,35 @@
-<p>cadastro works!</p>
+<div class="container">
+  <h1>Gerenciar Policiais</h1>
+  <form (ngSubmit)="salvar()">
+    <input [(ngModel)]="policial.rg_civil" name="rg_civil" placeholder="RG Civil" required />
+    <input [(ngModel)]="policial.rg_militar" name="rg_militar" placeholder="RG Militar" required />
+    <input [(ngModel)]="policial.cpf" name="cpf" placeholder="CPF" required />
+    <input [(ngModel)]="policial.data_nascimento" name="data_nascimento" type="date" required />
+    <input [(ngModel)]="policial.matricula" name="matricula" placeholder="Matrícula" required />
+    <button type="submit">{{ editando ? 'Atualizar' : 'Adicionar' }}</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>RG Civil</th>
+        <th>RG Militar</th>
+        <th>CPF</th>
+        <th>Data de Nascimento</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of policiais">
+        <td>{{ p.rg_civil }}</td>
+        <td>{{ p.rg_militar }}</td>
+        <td>{{ p.cpf }}</td>
+        <td>{{ p.data_nascimento | date }}</td>
+        <td>
+          <button (click)="editar(p)">Editar</button>
+          <button (click)="excluir(p.id!)">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
