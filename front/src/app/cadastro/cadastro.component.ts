@@ -35,15 +35,27 @@ export class CadastroComponent implements OnInit {
 
   salvar(): void {
     if (this.editando) {
-      this.service.atualizarPolicial(this.idEdicao, this.policial).subscribe(() => {
-        this.editando = false;
-        this.policial = { rg_civil: '', rg_militar: '', cpf: '', data_nascimento: '', matricula: '' };
-        this.listarPoliciais();
+      this.service.atualizarPolicial(this.idEdicao, this.policial).subscribe({
+        next: () => {
+          this.editando = false;
+          this.policial = { rg_civil: '', rg_militar: '', cpf: '', data_nascimento: '', matricula: '' };
+          this.listarPoliciais();
+        },
+        error: (erro) => {
+          console.error(erro);
+          alert(erro.error.erro || 'Ocorreu um erro desconhecido.');
+        }
       });
     } else {
-      this.service.cadastrarPolicial(this.policial).subscribe(() => {
-        this.policial = { rg_civil: '', rg_militar: '', cpf: '', data_nascimento: '', matricula: '' };
-        this.listarPoliciais();
+      this.service.cadastrarPolicial(this.policial).subscribe({
+        next: () => {
+          this.policial = { rg_civil: '', rg_militar: '', cpf: '', data_nascimento: '', matricula: '' };
+          this.listarPoliciais();
+        },
+        error: (erro) => {
+          console.error(erro);
+          alert(erro.error.erro || 'Ocorreu um erro desconhecido.');
+        }
       });
     }
   }
@@ -55,6 +67,7 @@ export class CadastroComponent implements OnInit {
   }
 
   excluir(id: number): void {
+    confirm('Deseja realmente excluir este cadastro?');
     this.service.deletarPolicial(id).subscribe(() => this.listarPoliciais());
   }
 

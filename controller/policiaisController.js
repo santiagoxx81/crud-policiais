@@ -5,7 +5,8 @@ const bcrypt = require('bcrypt');
 // Listar todos os policiais com filtro opcional por CPF ou RG
 exports.getAll = (req, res) => {
     const { cpf_input, rg_input } = req.query; // Pega o CPF e RG da URL
-    let sql = 'select id, rg_civil, rg_militar, cpf, data_nascimento from policiais';
+    // O comando DATE_FORMAT formata a data para 'YYYY-MM-DD'
+    let sql = 'select id, rg_civil, rg_militar, cpf, DATE_FORMAT(data_nascimento, "%Y-%m-%d") as data_nascimento from policiais';
     const params = [];
 
     // Lógica para adicionar filtros
@@ -27,9 +28,6 @@ exports.getAll = (req, res) => {
 exports.create = async (req, res) => {
     const { rg_civil, rg_militar, cpf_input, data_nascimento, matricula } = req.body;
 
-    // Converte a data de nascimento para o formato YYYY-MM-DD
-    const dataNascimentoFormatada = new Date(data_nascimento).toISOString().slice(0, 10);
-
     // Validação de campos obrigatórios
     if (!rg_civil || !rg_militar || !cpf_input || !data_nascimento || !matricula) {
         return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
@@ -46,9 +44,13 @@ exports.create = async (req, res) => {
         const matriculaHash = await bcrypt.hash(matricula, saltRounds);
 
         const sql = 'insert into policiais (rg_civil, rg_militar, cpf, data_nascimento, matricula) values (?, ?, ?, ?, ?)';
-        db.query(sql, [rg_civil, rg_militar, cpf_input, dataNascimentoFormatada, matriculaHash], (erro) => {
+        db.query(sql, [rg_civil, rg_militar, cpf_input, data_nascimento, matriculaHash], (erro) => {
             if (erro) {
                 console.log(erro);
+                // Tratamento de erro de chave única
+                if (erro.code === 'ER_DUP_ENTRY') {
+                    return res.status(409).json({ erro: 'RG Civil, RG Militar, CPF ou Matrícula já existem.' });
+                }
                 return res.status(500).json({ erro: 'Erro ao criar policial. Verifique os dados e tente novamente.' });
             }
             res.status(201).json({ mensagem: 'Policial cadastrado com sucesso.' });
@@ -77,10 +79,17 @@ exports.update = async (req, res) => {
     try {
         const sql = 'update policiais set rg_civil = ?, rg_militar = ?, cpf = ?, data_nascimento = ? where id = ?';
         db.query(sql, [rg_civil, rg_militar, cpf_input, data_nascimento, id], (erro) => {
-            if (erro) return res.status(500).json({ erro: 'Erro ao atualizar policial.' });
+            if (erro) {
+                console.log(erro);
+                if (erro.code === 'ER_DUP_ENTRY') {
+                    return res.status(409).json({ erro: 'RG Civil, RG Militar ou CPF já existem.' });
+                }
+                return res.status(500).json({ erro: 'Erro ao atualizar policial.' });
+            }
             res.json({ mensagem: 'Policial atualizado com sucesso.' });
         });
     } catch (erro) {
+        console.log(erro);
         res.status(500).json({ erro: 'Erro no servidor.' });
     }
 };
