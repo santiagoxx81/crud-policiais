@@ -5,7 +5,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 50px;
+    padding: 20px;
 }
 
 .container {
@@ -23,48 +23,47 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* * Layout para o formulário
+ * Usa Grid para criar 3 colunas em telas maiores
+ */
 form {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas para os inputs */
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin-bottom: 30px;
-    align-items: center; /* Alinha os itens verticalmente */
-}
-
-/* Garante que o input de Matrícula e o texto desabilitado usem 2 colunas */
-.form-field-full-width {
-    grid-column: span 2;
-}
-
-/* Estiliza os botões do formulário */
-.form-buttons {
-    display: flex;
-    gap: 15px;
-    grid-column: span 1;
+    align-items: center;
 }
 
 input[type="text"],
 input[type="date"],
-input[type="number"] {
+input[type="password"],
+input[disabled] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
-    box-sizing: border-box; /* Garante que padding e border não alterem o tamanho total */
+    box-sizing: border-box;
 }
 
-/* Estilo para o campo desabilitado */
+/* Estilo para o campo desabilitado (Matrícula) */
 input[disabled] {
     background-color: #f0f0f0;
     color: #888;
     cursor: not-allowed;
 }
 
-/* Estilo para os botões gerais */
+/* Estilo para os botões do formulário */
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    grid-column: span 1;
+    justify-content: flex-end; /* Alinha os botões à direita */
+}
+
+/* Estilo para os botões */
 button {
     padding: 10px 20px;
-    background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -73,31 +72,22 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Estilo para os botões de Ação dentro da tabela */
-table button {
-    padding: 8px 12px;
-    font-size: 14px;
-}
-
-/* Classes específicas para os botões de cor */
-.btn-red {
-    background-color: #dc3545; /* Vermelho padrão para botões de alerta */
-}
-
-.btn-red:hover {
-    background-color: #c82333;
-}
-
+/* Classe para o botão principal (Adicionar/Atualizar) */
 .btn-blue {
     background-color: #007bff;
 }
 
 .btn-blue:hover {
     background-color: #0056b3;
+}
+
+/* Classe para os botões de ação de perigo (Excluir/Cancelar) */
+.btn-red {
+    background-color: #dc3545;
+}
+
+.btn-red:hover {
+    background-color: #c82333;
 }
 
 table {
@@ -124,4 +114,60 @@ table tbody tr:nth-child(even) {
 
 table tbody tr:hover {
     background-color: #f1f1f1;
+}
+
+/* Ajustes para os botões de ação dentro da tabela */
+table button {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+/* * Media Queries para Responsividade
+ */
+@media (max-width: 768px) {
+    /* Em telas de tablet, usa 2 colunas para os inputs */
+    form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .form-buttons {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Em telas de celular, os inputs ficam em uma única coluna */
+    form {
+        grid-template-columns: 1fr;
+    }
+    .form-buttons {
+        grid-column: span 1;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    table thead {
+        display: none; /* Esconde o cabeçalho da tabela */
+    }
+    table, tbody, tr, td {
+        display: block;
+        width: 100%;
+    }
+    table tr {
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    table td {
+        text-align: right;
+        padding-left: 50%; /* Espaço para o label */
+        position: relative;
+    }
+    table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        text-align: left;
+        font-weight: bold;
+    }
 }
