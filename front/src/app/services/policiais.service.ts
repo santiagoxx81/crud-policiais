@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Policial {
+    // ... todos os campos
     id?: number;
     rg_civil: string;
     rg_militar: string;
@@ -10,7 +11,6 @@ export interface Policial {
     data_nascimento: string;
     matricula: string;
 }
-
 @Injectable({
     providedIn: 'root'
 })
@@ -34,8 +34,15 @@ export class PoliciaisService {
     }
 
     atualizarPolicial(id: number, policial: Policial): Observable<any> {
-        return this.http.put(`${this.api}/${id}`, policial);
-    }
+    // Envia apenas os campos que podem ser atualizados
+    const dadosParaAtualizar = {
+        rg_civil: policial.rg_civil,
+        rg_militar: policial.rg_militar,
+        cpf_input: policial.cpf,
+        data_nascimento: policial.data_nascimento
+    };
+    return this.http.put(`${this.api}/${id}`, dadosParaAtualizar);
+}
 
     deletarPolicial(id: number): Observable<any> {
         return this.http.delete(`${this.api}/${id}`);

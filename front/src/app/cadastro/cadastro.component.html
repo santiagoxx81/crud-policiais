@@ -5,7 +5,11 @@
     <input [(ngModel)]="policial.rg_militar" name="rg_militar" placeholder="RG Militar" required />
     <input [(ngModel)]="policial.cpf" name="cpf" placeholder="CPF" required />
     <input [(ngModel)]="policial.data_nascimento" name="data_nascimento" type="date" required />
-    <input [(ngModel)]="policial.matricula" name="matricula" placeholder="Matrícula" required />
+
+    <input *ngIf="!editando" [(ngModel)]="policial.matricula" name="matricula" placeholder="Matrícula" required />
+
+    <input *ngIf="editando" [value]="'Matrícula não pode ser alterada'" disabled />
+
     <button type="submit">{{ editando ? 'Atualizar' : 'Adicionar' }}</button>
     <button type="button" (click)="cancelarEdicao()" *ngIf="editando">Cancelar</button>
   </form>

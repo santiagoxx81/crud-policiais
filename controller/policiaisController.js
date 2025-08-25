@@ -62,11 +62,11 @@ exports.create = async (req, res) => {
 // Atualizar registros na tabela de policiais
 exports.update = async (req, res) => {
     const { id } = req.params;
-    const { rg_civil, rg_militar, cpf_input, data_nascimento, matricula } = req.body;
+    const { rg_civil, rg_militar, cpf_input, data_nascimento } = req.body;
 
-    // Validação de campos obrigatórios
-    if (!rg_civil || !rg_militar || !cpf_input || !data_nascimento || !matricula) {
-        return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
+    // Validação de campos obrigatórios para atualização (matrícula não é necessária)
+    if (!rg_civil || !rg_militar || !cpf_input || !data_nascimento) {
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios, exceto a matrícula.' });
     }
 
     // Validação de CPF
@@ -75,16 +75,13 @@ exports.update = async (req, res) => {
     }
 
     try {
-        const saltRounds = 10;
-        const matriculaHash = await bcrypt.hash(matricula, saltRounds);
-
-        const sql = 'update policiais set rg_civil = ?, rg_militar = ?, cpf = ?, data_nascimento = ?, matricula = ? where id = ?';
-        db.query(sql, [rg_civil, rg_militar, cpf_input, data_nascimento, matriculaHash, id], (erro) => {
+        const sql = 'update policiais set rg_civil = ?, rg_militar = ?, cpf = ?, data_nascimento = ? where id = ?';
+        db.query(sql, [rg_civil, rg_militar, cpf_input, data_nascimento, id], (erro) => {
             if (erro) return res.status(500).json({ erro: 'Erro ao atualizar policial.' });
             res.json({ mensagem: 'Policial atualizado com sucesso.' });
         });
     } catch (erro) {
-        res.status(500).json({ erro: 'Erro na criptografia da matrícula.' });
+        res.status(500).json({ erro: 'Erro no servidor.' });
     }
 };
 
