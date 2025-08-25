@@ -7,11 +7,12 @@
     <input [(ngModel)]="policial.data_nascimento" name="data_nascimento" type="date" required />
 
     <input *ngIf="!editando" [(ngModel)]="policial.matricula" name="matricula" placeholder="Matrícula" required />
-
     <input *ngIf="editando" [value]="'Matrícula não pode ser alterada'" disabled />
 
-    <button type="submit">{{ editando ? 'Atualizar' : 'Adicionar' }}</button>
-    <button type="button" (click)="cancelarEdicao()" *ngIf="editando">Cancelar</button>
+    <div class="form-buttons">
+        <button type="submit" [ngClass]="editando ? 'btn-blue' : 'btn-blue'">{{ editando ? 'Atualizar' : 'Adicionar' }}</button>
+        <button type="button" (click)="cancelarEdicao()" *ngIf="editando" class="btn-red">Cancelar</button>
+    </div>
   </form>
 
   <table>
@@ -31,8 +32,8 @@
         <td>{{ p.cpf }}</td>
         <td>{{ p.data_nascimento | date:'dd/MM/yyyy' }}</td>
         <td>
-          <button (click)="editar(p)">Editar</button>
-          <button (click)="excluir(p.id!)">Excluir</button>
+          <button (click)="editar(p)" class="btn-blue">Editar</button>
+          <button (click)="excluir(p.id!)" class="btn-red">Excluir</button>
         </td>
       </tr>
     </tbody>

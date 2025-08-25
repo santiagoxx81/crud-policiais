@@ -24,23 +24,44 @@ h1 {
 }
 
 form {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas para os inputs */
     gap: 15px;
     margin-bottom: 30px;
-    justify-content: center;
+    align-items: center; /* Alinha os itens verticalmente */
+}
+
+/* Garante que o input de Matrícula e o texto desabilitado usem 2 colunas */
+.form-field-full-width {
+    grid-column: span 2;
+}
+
+/* Estiliza os botões do formulário */
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    grid-column: span 1;
 }
 
 input[type="text"],
 input[type="date"],
 input[type="number"] {
-    flex: 1 1 200px;
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    box-sizing: border-box; /* Garante que padding e border não alterem o tamanho total */
 }
 
+/* Estilo para o campo desabilitado */
+input[disabled] {
+    background-color: #f0f0f0;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* Estilo para os botões gerais */
 button {
     padding: 10px 20px;
     background-color: #007bff;
@@ -53,6 +74,29 @@ button {
 }
 
 button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para os botões de Ação dentro da tabela */
+table button {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+/* Classes específicas para os botões de cor */
+.btn-red {
+    background-color: #dc3545; /* Vermelho padrão para botões de alerta */
+}
+
+.btn-red:hover {
+    background-color: #c82333;
+}
+
+.btn-blue {
+    background-color: #007bff;
+}
+
+.btn-blue:hover {
     background-color: #0056b3;
 }
 
@@ -80,10 +124,4 @@ table tbody tr:nth-child(even) {
 
 table tbody tr:hover {
     background-color: #f1f1f1;
-}
-
-/* Estilo para os botões dentro da tabela */
-table button {
-    padding: 8px 12px;
-    font-size: 14px;
 }
