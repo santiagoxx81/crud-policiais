@@ -7,6 +7,7 @@
     <input [(ngModel)]="policial.data_nascimento" name="data_nascimento" type="date" required />
     <input [(ngModel)]="policial.matricula" name="matricula" placeholder="Matrícula" required />
     <button type="submit">{{ editando ? 'Atualizar' : 'Adicionar' }}</button>
+    <button type="button" (click)="cancelarEdicao()" *ngIf="editando">Cancelar</button>
   </form>
 
   <table>
@@ -24,7 +25,7 @@
         <td>{{ p.rg_civil }}</td>
         <td>{{ p.rg_militar }}</td>
         <td>{{ p.cpf }}</td>
-        <td>{{ p.data_nascimento | date }}</td>
+        <td>{{ p.data_nascimento | date:'dd/MM/yyyy' }}</td>
         <td>
           <button (click)="editar(p)">Editar</button>
           <button (click)="excluir(p.id!)">Excluir</button>

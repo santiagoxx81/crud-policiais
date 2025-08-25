@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PoliciaisService, Policial } from '../services/policiais.service';
 
-
 @Component({
   selector: 'app-cadastro',
   standalone: true,
@@ -59,4 +58,9 @@ export class CadastroComponent implements OnInit {
     this.service.deletarPolicial(id).subscribe(() => this.listarPoliciais());
   }
 
+  // Novo método para cancelar a edição
+  cancelarEdicao(): void {
+    this.editando = false;
+    this.policial = { rg_civil: '', rg_militar: '', cpf: '', data_nascimento: '', matricula: '' };
+  }
 }
