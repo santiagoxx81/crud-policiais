@@ -7,13 +7,20 @@
     <input [(ngModel)]="policial.data_nascimento" name="data_nascimento" type="date" required />
 
     <input *ngIf="!editando" [(ngModel)]="policial.matricula" name="matricula" placeholder="Matrícula" required />
-    <input *ngIf="editando" [value]="'Matrícula não pode ser alterada'" disabled />
 
     <div class="form-buttons">
-        <button type="submit" [ngClass]="editando ? 'btn-blue' : 'btn-blue'">{{ editando ? 'Atualizar' : 'Adicionar' }}</button>
-        <button type="button" (click)="cancelarEdicao()" *ngIf="editando" class="btn-red">Cancelar</button>
+      <button type="submit" class="btn-blue">{{ editando ? 'Atualizar' : 'Adicionar' }}</button>
+      <button type="button" (click)="cancelarEdicao()" *ngIf="editando" class="btn-red">Cancelar</button>
     </div>
   </form>
+
+  <hr />
+
+  <div class="search-section">
+    <input [(ngModel)]="searchCpf" name="search_cpf" placeholder="Buscar por CPF" />
+    <button (click)="buscarPorCpf()" class="btn-blue">Buscar</button>
+    <button (click)="listarPoliciais()" class="btn-green">Limpar Busca</button>
+  </div>
 
   <table>
     <thead>
@@ -27,13 +34,15 @@
     </thead>
     <tbody>
       <tr *ngFor="let p of policiais">
-        <td>{{ p.rg_civil }}</td>
-        <td>{{ p.rg_militar }}</td>
-        <td>{{ p.cpf }}</td>
-        <td>{{ p.data_nascimento | date:'dd/MM/yyyy' }}</td>
-        <td>
-          <button (click)="editar(p)" class="btn-blue">Editar</button>
-          <button (click)="excluir(p.id!)" class="btn-red">Excluir</button>
+        <td data-label="RG Civil">{{ p.rg_civil }}</td>
+        <td data-label="RG Militar">{{ p.rg_militar }}</td>
+        <td data-label="CPF">{{ p.cpf }}</td>
+        <td data-label="Data de Nascimento">{{ p.data_nascimento | date:'dd/MM/yyyy' }}</td>
+        <td data-label="Ações">
+          <div class="table-actions">
+            <button (click)="editar(p)" class="btn-blue">Editar</button>
+            <button (click)="excluir(p.id!)" class="btn-red">Excluir</button>
+          </div>
         </td>
       </tr>
     </tbody>

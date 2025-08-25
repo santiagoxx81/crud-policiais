@@ -24,6 +24,7 @@ export class CadastroComponent implements OnInit {
   };
   editando = false;
   idEdicao = 0;
+  searchCpf: string = ''; // Nova variável para o campo de busca
 
   // * Construtor e Inicialização
   constructor(private service: PoliciaisService) {}
@@ -34,7 +35,22 @@ export class CadastroComponent implements OnInit {
 
   // * Métodos de Leitura (GET)
   listarPoliciais(): void {
+    // Busca a lista completa de policiais (sem filtros)
     this.service.listarPoliciais().subscribe(data => this.policiais = data);
+  }
+
+  // * Método de Busca por CPF
+  buscarPorCpf(): void {
+    // Envia o valor do campo de busca para o serviço
+    this.service.listarPoliciais(this.searchCpf).subscribe({
+      next: (data) => {
+        this.policiais = data;
+      },
+      error: (erro) => {
+        console.error(erro);
+        alert(erro.error.erro || 'Ocorreu um erro ao buscar o policial.');
+      }
+    });
   }
 
   // * Métodos de Salvar e Atualizar (POST e PUT)
@@ -74,13 +90,15 @@ export class CadastroComponent implements OnInit {
 
   // * Método de Exclusão (DELETE)
   excluir(id: number): void {
-    confirm('Deseja realmente excluir este cadastro?');
-    this.service.deletarPolicial(id).subscribe(() => this.listarPoliciais());
+    if (confirm('Deseja realmente excluir este cadastro?')) {
+      this.service.deletarPolicial(id).subscribe(() => this.listarPoliciais());
+    }
   }
 
   // * Método de Cancelamento de Edição
   cancelarEdicao(): void {
     this.editando = false;
     this.policial = { rg_civil: '', rg_militar: '', cpf: '', data_nascimento: '', matricula: '' };
+    this.listarPoliciais(); // Retorna para a lista completa
   }
 }

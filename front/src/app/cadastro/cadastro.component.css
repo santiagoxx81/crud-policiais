@@ -90,6 +90,15 @@ button {
     background-color: #c82333;
 }
 
+/* Nova classe para o botão verde */
+.btn-green {
+    background-color: #28a745;
+}
+
+.btn-green:hover {
+    background-color: #218838;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -116,10 +125,29 @@ table tbody tr:hover {
     background-color: #f1f1f1;
 }
 
+/* Espaçamento entre os botões na coluna de ações da tabela */
+.table-actions {
+    display: flex;
+    gap: 10px;
+}
+
 /* Ajustes para os botões de ação dentro da tabela */
 table button {
     padding: 8px 12px;
     font-size: 14px;
+}
+
+/* Ajuste no layout da seção de busca */
+.search-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Agora, a caixa de busca tem uma largura máxima para não se estender demais */
+.search-section input {
+    max-width: 250px;
 }
 
 /* * Media Queries para Responsividade
@@ -131,6 +159,15 @@ table button {
     }
     .form-buttons {
         grid-column: span 2;
+    }
+    /* Estilo para a seção de busca em tablets */
+    .search-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-section input, .search-section button {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
 
