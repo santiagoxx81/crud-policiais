@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// * Definição da Interface do Policial
+// Representa a estrutura dos dados de um policial.
 export interface Policial {
     id?: number;
     rg_civil: string;
@@ -11,14 +13,19 @@ export interface Policial {
     matricula: string;
 }
 
+// * Serviço de Comunicação com a API
+// Permite que o componente faça requisições HTTP para o backend.
 @Injectable({
     providedIn: 'root'
 })
 export class PoliciaisService {
+    // URL base da sua API
     private api = 'http://localhost:3012/policiais';
 
     constructor(private http: HttpClient) { }
 
+    // * Método GET: Listar e Buscar Policiais
+    // Busca todos os policiais ou filtra por CPF ou RG.
     listarPoliciais(cpf?: string, rg?: string): Observable<Policial[]> {
         let params = new HttpParams();
         if (cpf) {
@@ -29,20 +36,24 @@ export class PoliciaisService {
         return this.http.get<Policial[]>(this.api, { params });
     }
 
+    // * Método POST: Cadastrar Policial
+    // Envia os dados de um novo policial para o backend.
     cadastrarPolicial(policial: Policial): Observable<any> {
         // Objeto que será enviado para a API
         const dadosParaCadastrar = {
             rg_civil: policial.rg_civil,
             rg_militar: policial.rg_militar,
-            cpf_input: policial.cpf, // Adicionando o campo como cpf_input
+            cpf_input: policial.cpf,
             data_nascimento: policial.data_nascimento,
             matricula: policial.matricula
         };
         return this.http.post(this.api, dadosParaCadastrar);
     }
 
+    // * Método PUT: Atualizar Policial
+    // Envia os dados atualizados para o backend.
     atualizarPolicial(id: number, policial: Policial): Observable<any> {
-        // O backend espera o campo 'cpf' e não 'cpf_input' na rota de PUT, vamos ajustar o objeto
+        // Envia apenas os campos que podem ser atualizados
         const dadosParaAtualizar = {
             rg_civil: policial.rg_civil,
             rg_militar: policial.rg_militar,
@@ -52,6 +63,8 @@ export class PoliciaisService {
         return this.http.put(`${this.api}/${id}`, dadosParaAtualizar);
     }
 
+    // * Método DELETE: Excluir Policial
+    // Remove um policial do banco de dados pelo ID.
     deletarPolicial(id: number): Observable<any> {
         return this.http.delete(`${this.api}/${id}`);
     }
